@@ -5,27 +5,18 @@ import {
     addCartItem,
     getCart
 } from "../controllers/cart_controller";
-
-
 const router = Router();
-
-
-router.post(
-    "/",
+router.post("/",
     createCart
 );
 
-
-router.post(
-    "/:cartId/items",
+router.post("/:cartId/items",
     addCartItem
 );
 
 
-router.get(
-    "/:cartId",
+router.get("/:cartId",
     getCart
 );
-
 
 export default router;

@@ -8,19 +8,9 @@ import {
 
 export class CheckoutService {
 
-
-    // ========================================
-    // CREATE ORDER FROM CART
-    // ========================================
-
     async createOrder(
         data: CreateOrderRequest
     ) {
-
-
-        // ------------------------------------
-        // 1. Get cart
-        // ------------------------------------
 
         const { data: cart, error: cartError } =
             await supabase
@@ -51,11 +41,6 @@ export class CheckoutService {
 
         }
 
-
-        // ------------------------------------
-        // 2. Check cart status
-        // ------------------------------------
-
         if (cart.status !== "active") {
 
             throw new Error(
@@ -63,11 +48,6 @@ export class CheckoutService {
             );
 
         }
-
-
-        // ------------------------------------
-        // 3. Check cart items
-        // ------------------------------------
 
         if (
             !cart.cart_items ||
@@ -79,12 +59,6 @@ export class CheckoutService {
             );
 
         }
-
-
-        // ------------------------------------
-        // 4. Validate stock + calculate total
-        // ------------------------------------
-
         let totalAmount = 0;
 
 
@@ -148,10 +122,6 @@ export class CheckoutService {
             );
 
 
-        // ------------------------------------
-        // 5. Create order
-        // ------------------------------------
-
         const { data: order, error: orderError } =
             await supabase
                 .from("orders")
@@ -188,11 +158,6 @@ export class CheckoutService {
 
         }
 
-
-        // ------------------------------------
-        // 6. Attach order ID to items
-        // ------------------------------------
-
         const itemsToInsert =
             orderItems.map(
                 (item: any) => ({
@@ -204,11 +169,6 @@ export class CheckoutService {
 
                 })
             );
-
-
-        // ------------------------------------
-        // 7. Create order items
-        // ------------------------------------
 
         const {
             data: createdItems,
@@ -226,11 +186,6 @@ export class CheckoutService {
             );
 
         }
-
-
-        // ------------------------------------
-        // 8. Reduce stock
-        // ------------------------------------
 
         for (
             const item of cart.cart_items
@@ -257,11 +212,6 @@ export class CheckoutService {
 
         }
 
-
-        // ------------------------------------
-        // 9. Mark cart as checked out
-        // ------------------------------------
-
         await supabase
             .from("carts")
             .update({
@@ -278,11 +228,6 @@ export class CheckoutService {
                 data.cartId
             );
 
-
-        // ------------------------------------
-        // 10. Return checkout result
-        // ------------------------------------
-
         return {
 
             order,
@@ -293,11 +238,6 @@ export class CheckoutService {
         };
 
     }
-
-
-    // ========================================
-    // GET ALL ORDERS
-    // ========================================
 
     async getAllOrders() {
 
@@ -337,11 +277,6 @@ export class CheckoutService {
         return data;
 
     }
-
-
-    // ========================================
-    // GET ONE ORDER
-    // ========================================
 
     async getOrderById(
         id: string
@@ -383,11 +318,6 @@ export class CheckoutService {
 
     }
 
-
-    // ========================================
-    // UPDATE ORDER
-    // ========================================
-
     async updateOrder(
         id: string,
         data: UpdateOrderRequest
@@ -427,11 +357,6 @@ export class CheckoutService {
         return updatedOrder;
 
     }
-
-
-    // ========================================
-    // FILTER ORDERS
-    // ========================================
 
     async filterOrders(
         status?: string,

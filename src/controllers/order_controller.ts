@@ -1,72 +1,45 @@
 import { Request, Response } from "express";
 
 import { CheckoutService } from "../services/checkout_service";
+import {OrderFilterQuery} from "../types/order_types"
 
 const checkoutService = new CheckoutService();
-
-
-// ========================================
-// Types
-// ========================================
-
-interface OrderFilterQuery {
-    status?: string;
-    customerEmail?: string;
-}
-
-
-// ========================================
-// POST /api/orders
-// Create order from cart
-// ========================================
-
 export async function createOrder(
     req: Request,
     res: Response
 ) {
     try {
-
         console.log("CREATE ORDER BODY:", req.body);
-
         if (!req.body) {
             return res.status(400).json({
                 success: false,
                 message: "Request body is missing"
             });
         }
-
         const {
             cartId,
             customerName,
             customerEmail,
             shippingAddress
         } = req.body;
-
-
         if (!cartId) {
             return res.status(400).json({
                 success: false,
                 message: "cartId is required"
             });
         }
-
-
         if (!customerName) {
             return res.status(400).json({
                 success: false,
                 message: "customerName is required"
             });
         }
-
-
         if (!customerEmail) {
             return res.status(400).json({
                 success: false,
                 message: "customerEmail is required"
             });
         }
-
-
         const order =
             await checkoutService.createOrder({
                 cartId,
@@ -95,13 +68,6 @@ export async function createOrder(
 
     }
 }
-
-
-// ========================================
-// GET /api/orders
-// Get all orders
-// ========================================
-
 export async function getAllOrders(
     req: Request,
     res: Response
@@ -131,13 +97,6 @@ export async function getAllOrders(
 
     }
 }
-
-
-// ========================================
-// GET /api/orders/:id
-// Get one order
-// ========================================
-
 export async function getOneOrder(
     req: Request<{ id: string }>,
     res: Response
@@ -181,12 +140,6 @@ export async function getOneOrder(
 
     }
 }
-
-
-// ========================================
-// PATCH /api/orders/:id
-// Update order
-// ========================================
 
 export async function updateOrder(
     req: Request<{ id: string }>,
@@ -261,12 +214,6 @@ export async function updateOrder(
 
     }
 }
-
-
-// ========================================
-// GET /api/orders/filter
-// Filter orders
-// ========================================
 
 export async function filterOrders(
     req: Request<

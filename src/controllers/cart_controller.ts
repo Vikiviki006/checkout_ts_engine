@@ -1,22 +1,11 @@
 import { Request, Response } from "express";
-
 import { CartService } from "../services/cart_service";
-
 const cartService = new CartService();
-
-
-// ========================================
-// CREATE CART
-// POST /api/carts
-// ========================================
-
 export async function createCart(
     req: Request,
     res: Response
 ) {
     try {
-
-        // Check that body exists
         if (!req.body) {
             return res.status(400).json({
                 success: false,
@@ -47,12 +36,6 @@ export async function createCart(
 
     }
 }
-
-
-// ========================================
-// ADD CART ITEM
-// POST /api/carts/:cartId/items
-// ========================================
 
 export async function addCartItem(
     req: Request<{ cartId: string }>,
@@ -128,12 +111,6 @@ export async function addCartItem(
 
     }
 }
-
-
-// ========================================
-// GET CART
-// GET /api/carts/:cartId
-// ========================================
 
 export async function getCart(
     req: Request<{ cartId: string }>,

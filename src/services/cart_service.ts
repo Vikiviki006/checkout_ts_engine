@@ -5,13 +5,7 @@ import {
     AddCartItemRequest
 } from "../types/cart_types";
 
-
 export class CartService {
-
-    // ========================================
-    // CREATE CART
-    // ========================================
-
     async createCart(data: CreateCartRequest) {
 
         const { data: cart, error } =
@@ -31,19 +25,10 @@ export class CartService {
         return cart;
     }
 
-
-    // ========================================
-    // ADD ITEM TO CART
-    // ========================================
-
     async addItem(
         cartId: string,
         data: AddCartItemRequest
     ) {
-
-        // ------------------------------------
-        // Check product
-        // ------------------------------------
 
         const { data: product, error: productError } =
             await supabase
@@ -56,11 +41,6 @@ export class CartService {
             throw new Error("Product not found");
         }
 
-
-        // ------------------------------------
-        // Check stock
-        // ------------------------------------
-
         if (product.stock < data.quantity) {
 
             throw new Error(
@@ -69,10 +49,6 @@ export class CartService {
 
         }
 
-
-        // ------------------------------------
-        // Check existing cart item
-        // ------------------------------------
 
         const { data: existingItem } =
             await supabase
@@ -118,10 +94,6 @@ export class CartService {
         }
 
 
-        // ------------------------------------
-        // Create new cart item
-        // ------------------------------------
-
         const { data: cartItem, error } =
             await supabase
                 .from("cart_items")
@@ -142,10 +114,6 @@ export class CartService {
         return cartItem;
     }
 
-
-    // ========================================
-    // GET CART
-    // ========================================
 
     async getCart(cartId: string) {
 
@@ -178,8 +146,6 @@ export class CartService {
         if (error) {
             throw new Error("Cart not found");
         }
-
-
         return data;
     }
 }

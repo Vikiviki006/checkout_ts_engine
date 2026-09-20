@@ -7,23 +7,15 @@ import {
     updateOrder,
     filterOrders
 } from "../controllers/order_controller";
-
-
 const router = Router();
-
-
 router.post(
     "/",
     createOrder
 );
-
-
 router.get(
     "/",
     getAllOrders
 );
-
-
 router.get(
     "/filter",
     filterOrders

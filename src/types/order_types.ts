@@ -8,3 +8,7 @@ export interface UpdateOrderRequest {
     status?: string;
     shippingAddress?: string;
 }
+export interface OrderFilterQuery {
+    status?: string;
+    customerEmail?: string;
+}
