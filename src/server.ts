@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import cartRoutes from "./routes/cart_routes";
-import orderRoutes from "./routes/order_routes";
+import cartRoutes from "./cart/cart_routes";
+import orderRoutes from "./order/order_routes";
 
 dotenv.config();
 

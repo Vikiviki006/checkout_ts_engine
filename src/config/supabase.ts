@@ -1,20 +1,59 @@
-import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
+
+import {
+    createClient
+} from "@supabase/supabase-js";
+
+import type { EnvConfig } from "./types";
+import type { SupabaseClientType } from "./types";
+
 
 dotenv.config();
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
 
-if (!supabaseUrl) {
-    throw new Error("SUPABASE_URL is missing");
+// ========================================
+// Environment Configuration
+// ========================================
+
+const env: EnvConfig = {
+
+    SUPABASE_URL:
+        process.env.SUPABASE_URL ?? "",
+
+    SUPABASE_SECRET_KEY:
+        process.env.SUPABASE_SECRET_KEY ?? ""
+
+};
+
+
+// ========================================
+// Environment Validation
+// ========================================
+
+if (!env.SUPABASE_URL) {
+
+    throw new Error(
+        "SUPABASE_URL is missing"
+    );
+
 }
 
-if (!supabaseSecretKey) {
-    throw new Error("SUPABASE_SECRET_KEY is missing");
+
+if (!env.SUPABASE_SECRET_KEY) {
+
+    throw new Error(
+        "SUPABASE_SECRET_KEY is missing"
+    );
+
 }
 
-export const supabase = createClient(
-    supabaseUrl,
-    supabaseSecretKey
-);
+
+// ========================================
+// Supabase Client
+// ========================================
+
+export const supabase: SupabaseClientType =
+    createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_SECRET_KEY
+    );
