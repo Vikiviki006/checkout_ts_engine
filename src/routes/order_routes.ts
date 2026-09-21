@@ -20,18 +20,12 @@ router.get(
     "/filter",
     filterOrders
 );
-
-
 router.get(
     "/:id",
     getOneOrder
 );
-
-
 router.patch(
     "/:id",
     updateOrder
 );
-
-
 export default router;

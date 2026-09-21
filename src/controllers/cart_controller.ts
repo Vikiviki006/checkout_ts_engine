@@ -63,15 +63,15 @@ export async function addCartItem(
 
 
         const {
-            productId,
+            productid,
             quantity
         } = req.body;
 
 
-        if (!productId) {
+        if (!productid) {
             return res.status(400).json({
                 success: false,
-                message: "productId is required"
+                message: "productid is required"
             });
         }
 
@@ -91,7 +91,7 @@ export async function addCartItem(
             await cartService.addItem(
                 cartId,
                 {
-                    productId,
+                    productid,
                     quantity
                 }
             );

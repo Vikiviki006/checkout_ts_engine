@@ -4,10 +4,8 @@ import {
     CreateCartRequest,
     AddCartItemRequest
 } from "../types/cart_types";
-
 export class CartService {
     async createCart(data: CreateCartRequest) {
-
         const { data: cart, error } =
             await supabase
                 .from("carts")
@@ -34,7 +32,7 @@ export class CartService {
             await supabase
                 .from("products")
                 .select("*")
-                .eq("id", data.productId)
+                .eq("id", data.productid)
                 .single();
 
         if (productError || !product) {
@@ -55,7 +53,7 @@ export class CartService {
                 .from("cart_items")
                 .select("*")
                 .eq("cart_id", cartId)
-                .eq("product_id", data.productId)
+                .eq("product_id", data.productid)
                 .maybeSingle();
 
 
@@ -99,7 +97,7 @@ export class CartService {
                 .from("cart_items")
                 .insert({
                     cart_id: cartId,
-                    product_id: data.productId,
+                    product_id: data.productid,
                     quantity: data.quantity
                 })
                 .select()

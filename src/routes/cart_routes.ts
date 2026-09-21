@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import {
     createCart,
     addCartItem,
@@ -13,10 +12,7 @@ router.post("/",
 router.post("/:cartId/items",
     addCartItem
 );
-
-
 router.get("/:cartId",
     getCart
 );
-
 export default router;

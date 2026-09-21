@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-
 import { CheckoutService } from "../services/checkout_service";
 import {OrderFilterQuery} from "../types/order_types"
-
 const checkoutService = new CheckoutService();
 export async function createOrder(
     req: Request,
