@@ -23,10 +23,6 @@ const checkoutService: CheckoutService =
 
 export class OrderController {
 
-    // ========================================
-    // Create Order
-    // ========================================
-
     async createOrder(
         req: Request<
             Record<string, never>,
@@ -79,12 +75,6 @@ export class OrderController {
             );
         }
     }
-
-
-    // ========================================
-    // Get All Orders
-    // ========================================
-
     async getAllOrders(
         req: Request<
             Record<string, never>,
@@ -130,12 +120,6 @@ export class OrderController {
             );
         }
     }
-
-
-    // ========================================
-    // Get Order By ID
-    // ========================================
-
     async getOneOrder(
         req: Request<
             OrderIdParams,
@@ -186,11 +170,6 @@ export class OrderController {
             );
         }
     }
-
-
-    // ========================================
-    // Update Order
-    // ========================================
 
     async updateOrder(
         req: Request<
@@ -248,11 +227,6 @@ export class OrderController {
             );
         }
     }
-
-
-    // ========================================
-    // Filter Orders
-    // ========================================
 
     async filterOrders(
         req: Request<

@@ -17,17 +17,9 @@ import type {
 
 export class CheckoutService {
 
-    // ========================================
-    // Create Order
-    // ========================================
-
     async createOrder(
         data: CreateOrderRequest
     ): Promise<CreateOrderResult> {
-
-        // ------------------------------------
-        // Get Cart
-        // ------------------------------------
 
         const {
             data: cart,
@@ -65,11 +57,6 @@ export class CheckoutService {
         const checkoutCart: CheckoutCart =
             cart as CheckoutCart;
 
-
-        // ------------------------------------
-        // Check Cart Status
-        // ------------------------------------
-
         if (
             checkoutCart.status !==
             "active"
@@ -79,11 +66,6 @@ export class CheckoutService {
             );
         }
 
-
-        // ------------------------------------
-        // Check Cart Items
-        // ------------------------------------
-
         if (
             !checkoutCart.cart_items ||
             checkoutCart.cart_items.length === 0
@@ -92,11 +74,6 @@ export class CheckoutService {
                 "Cart is empty"
             );
         }
-
-
-        // ------------------------------------
-        // Calculate Total
-        // ------------------------------------
 
         let totalAmount: number = 0;
 
@@ -118,11 +95,6 @@ export class CheckoutService {
                         );
                     }
 
-
-                    // ------------------------
-                    // Stock Validation
-                    // ------------------------
-
                     if (
                         product.stock <
                         item.quantity
@@ -131,11 +103,6 @@ export class CheckoutService {
                             `Not enough stock for ${product.name}`
                         );
                     }
-
-
-                    // ------------------------
-                    // Price Calculation
-                    // ------------------------
 
                     const unitPrice: number =
                         Number(product.price);
@@ -157,11 +124,6 @@ export class CheckoutService {
                     };
                 }
             );
-
-
-        // ------------------------------------
-        // Create Order
-        // ------------------------------------
 
         const {
             data: order,
@@ -201,11 +163,6 @@ export class CheckoutService {
         const createdOrder: Order =
             order as Order;
 
-
-        // ------------------------------------
-        // Prepare Items
-        // ------------------------------------
-
         const itemsToInsert =
             orderItems.map(
                 (
@@ -216,11 +173,6 @@ export class CheckoutService {
                         createdOrder.id
                 })
             );
-
-
-        // ------------------------------------
-        // Insert Order Items
-        // ------------------------------------
 
         const {
             data: createdItems,
@@ -249,11 +201,6 @@ export class CheckoutService {
             OrderItem[] =
             createdItems as OrderItem[];
 
-
-        // ------------------------------------
-        // Update Product Stock
-        // ------------------------------------
-
         for (
             const item
             of checkoutCart.cart_items
@@ -262,20 +209,15 @@ export class CheckoutService {
             const product:
                 Product | null =
                 item.products;
-
-
             if (!product) {
                 throw new Error(
                     "Product not found"
                 );
             }
 
-
             const newStock: number =
                 product.stock -
                 item.quantity;
-
-
             const {
                 error: stockError
             } = await supabase
@@ -287,20 +229,12 @@ export class CheckoutService {
                     "id",
                     product.id
                 );
-
-
             if (stockError) {
                 throw new Error(
                     `Failed to update stock: ${stockError.message}`
                 );
             }
         }
-
-
-        // ------------------------------------
-        // Mark Cart As Checked Out
-        // ------------------------------------
-
         const {
             error: cartUpdateError
         } = await supabase
@@ -322,11 +256,6 @@ export class CheckoutService {
             );
         }
 
-
-        // ------------------------------------
-        // Final Result
-        // ------------------------------------
-
         const result: CreateOrderResult = {
             order: createdOrder,
             items: typedCreatedItems
@@ -335,11 +264,6 @@ export class CheckoutService {
 
         return result;
     }
-
-
-    // ========================================
-    // Get All Orders
-    // ========================================
 
     async getAllOrders(): Promise<OrderWithItems[]> {
 
@@ -381,11 +305,6 @@ export class CheckoutService {
         return data as OrderWithItems[];
     }
 
-
-    // ========================================
-    // Get Order By ID
-    // ========================================
-
     async getOrderById(
         id: string
     ): Promise<OrderWithItems> {
@@ -422,11 +341,6 @@ export class CheckoutService {
         return data as OrderWithItems;
     }
 
-
-    // ========================================
-    // Update Order
-    // ========================================
-
     async updateOrder(
         id: string,
         data: UpdateOrderRequest
@@ -460,11 +374,6 @@ export class CheckoutService {
         return updatedOrder as Order;
     }
 
-
-    // ========================================
-    // Filter Orders
-    // ========================================
-
     async filterOrders(
         status?: OrderFilterQuery["status"],
         customerEmail?: string
@@ -484,11 +393,6 @@ export class CheckoutService {
                     )
                 `);
 
-
-        // ------------------------------------
-        // Status Filter
-        // ------------------------------------
-
         if (status) {
 
             query = query.eq(
@@ -497,11 +401,6 @@ export class CheckoutService {
             );
         }
 
-
-        // ------------------------------------
-        // Email Filter
-        // ------------------------------------
-
         if (customerEmail) {
 
             query = query.eq(
@@ -509,11 +408,6 @@ export class CheckoutService {
                 customerEmail
             );
         }
-
-
-        // ------------------------------------
-        // Execute Query
-        // ------------------------------------
 
         const {
             data,
@@ -533,12 +427,9 @@ export class CheckoutService {
             );
         }
 
-
         if (!data) {
             return [];
         }
-
-
         return data as OrderWithItems[];
     }
 }

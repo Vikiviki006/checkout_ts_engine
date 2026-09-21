@@ -1,7 +1,3 @@
-// ========================================
-// Order Status
-// ========================================
-
 export type OrderStatus =
     | "pending"
     | "confirmed"
@@ -10,11 +6,6 @@ export type OrderStatus =
     | "delivered"
     | "cancelled";
 
-
-// ========================================
-// Create Order Request
-// ========================================
-
 export type CreateOrderRequest = {
     cartId: string;
     customerName: string;
@@ -22,39 +13,19 @@ export type CreateOrderRequest = {
     shippingAddress?: string;
 };
 
-
-// ========================================
-// Update Order Request
-// ========================================
-
 export type UpdateOrderRequest = {
     status?: OrderStatus;
     shippingAddress?: string;
 };
-
-
-// ========================================
-// Order Filter Query
-// ========================================
 
 export type OrderFilterQuery = {
     status?: OrderStatus;
     customerEmail?: string;
 };
 
-
-// ========================================
-// Order Route Parameters
-// ========================================
-
 export type OrderIdParams = {
     id: string;
 };
-
-
-// ========================================
-// Product
-// ========================================
 
 export type Product = {
     id: string;
@@ -63,41 +34,20 @@ export type Product = {
     stock: number;
 };
 
-
-// ========================================
-// Category
-// ========================================
-
 export type Category = {
     id: string;
     name: string;
 };
-
-
-// ========================================
-// Product + Category
-// Intersection Type
-// ========================================
 
 export type ProductWithCategory =
     Product & {
         categories: Category | null;
     };
 
-
-// ========================================
-// Cart Status
-// ========================================
-
 export type CartStatus =
     | "active"
     | "checked_out"
     | "abandoned";
-
-
-// ========================================
-// Cart Item During Checkout
-// ========================================
 
 export type CheckoutCartItem = {
     id: string;
@@ -106,21 +56,11 @@ export type CheckoutCartItem = {
     products: Product | null;
 };
 
-
-// ========================================
-// Cart During Checkout
-// ========================================
-
 export type CheckoutCart = {
     id: string;
     status: CartStatus;
     cart_items: CheckoutCartItem[];
 };
-
-
-// ========================================
-// Order
-// ========================================
 
 export type Order = {
     id: string;
@@ -134,11 +74,6 @@ export type Order = {
     updated_at: string;
 };
 
-
-// ========================================
-// Order Item
-// ========================================
-
 export type OrderItem = {
     id: string;
     order_id: string;
@@ -148,22 +83,10 @@ export type OrderItem = {
     subtotal: number;
 };
 
-
-// ========================================
-// Order Item + Product
-// Intersection Type
-// ========================================
-
 export type OrderItemWithProduct =
     OrderItem & {
         products: ProductWithCategory | null;
     };
-
-
-// ========================================
-// Create Order Item
-// Used before DB generates id/order_id
-// ========================================
 
 export type CreateOrderItem =
     Omit<
@@ -171,30 +94,15 @@ export type CreateOrderItem =
         "id" | "order_id"
     >;
 
-
-// ========================================
-// Create Order Result
-// ========================================
-
 export type CreateOrderResult = {
     order: Order;
     items: OrderItem[];
 };
 
-
-// ========================================
-// Order With Items
-// ========================================
-
 export type OrderWithItems =
     Order & {
         order_items: OrderItemWithProduct[];
     };
-
-
-// ========================================
-// Generic API Response
-// ========================================
 
 export type ApiResponse<T> = {
     success: boolean;

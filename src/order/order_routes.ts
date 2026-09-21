@@ -9,24 +9,12 @@ const orderController:
     OrderController =
     new OrderController();
 
-
-// ========================================
-// Create Order
-// POST /orders
-// ========================================
-
 router.post(
     "/",
     orderController.createOrder.bind(
         orderController
     )
 );
-
-
-// ========================================
-// Get All Orders
-// GET /orders
-// ========================================
 
 router.get(
     "/",
@@ -35,24 +23,12 @@ router.get(
     )
 );
 
-
-// ========================================
-// Filter Orders
-// GET /orders/filter
-// ========================================
-
 router.get(
     "/filter",
     orderController.filterOrders.bind(
         orderController
     )
 );
-
-
-// ========================================
-// Get Order By ID
-// GET /orders/:id
-// ========================================
 
 router.get(
     "/:id",
@@ -61,18 +37,10 @@ router.get(
     )
 );
 
-
-// ========================================
-// Update Order
-// PATCH /orders/:id
-// ========================================
-
 router.patch(
     "/:id",
     orderController.updateOrder.bind(
         orderController
     )
 );
-
-
 export default router;
