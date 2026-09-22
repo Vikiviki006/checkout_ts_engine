@@ -9,12 +9,6 @@ import type { SupabaseClientType } from "./types";
 
 
 dotenv.config();
-
-
-// ========================================
-// Environment Configuration
-// ========================================
-
 const env: EnvConfig = {
 
     SUPABASE_URL:
@@ -25,10 +19,6 @@ const env: EnvConfig = {
 
 };
 
-
-// ========================================
-// Environment Validation
-// ========================================
 
 if (!env.SUPABASE_URL) {
 
@@ -46,11 +36,6 @@ if (!env.SUPABASE_SECRET_KEY) {
     );
 
 }
-
-
-// ========================================
-// Supabase Client
-// ========================================
 
 export const supabase: SupabaseClientType =
     createClient(

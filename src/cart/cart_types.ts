@@ -4,7 +4,7 @@ export type CartStatus =
     | "abandoned";
 
 export type CreateCartRequest = {
-    customerEmail?: string;
+    customerEmail: string;
 };
 
 

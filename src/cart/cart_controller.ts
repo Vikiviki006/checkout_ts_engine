@@ -66,7 +66,6 @@ export async function addCartItem(
     >,
     res: Response<ApiResponse<CartItem>>
 ): Promise<void> {
-
     try {
         const {
             cartId

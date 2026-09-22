@@ -67,7 +67,7 @@ export class CartService {
 
 
         const typedProduct: Product =
-            product as Product;
+            product;
 
         const requestedQuantity: number =
             data.quantity;
@@ -109,7 +109,7 @@ export class CartService {
         if (existingItem) {
 
             const typedExistingItem: CartItem =
-                existingItem as CartItem;
+                existingItem;
 
 
             const currentQuantity: number =
@@ -150,12 +150,8 @@ export class CartService {
                     "Failed to update cart item"
                 );
             }
-
-
             const result: CartItem =
-                updatedItem as CartItem;
-
-
+                updatedItem;
             return result;
         }
 
@@ -188,9 +184,7 @@ export class CartService {
 
 
         const result: CartItem =
-            cartItem as CartItem;
-
-
+            cartItem;
         return result;
     }
 
