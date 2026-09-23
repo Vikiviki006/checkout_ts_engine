@@ -285,7 +285,7 @@ export class OrderController {
         }
 
     }
-    placeOrder = async (
+    async placeOrder(
         req: Request<
             Record<string, never>,
             ApiResponse<PlaceOrderResult>,
@@ -294,28 +294,20 @@ export class OrderController {
         res: Response<
             ApiResponse<PlaceOrderResult>
         >
-    ): Promise<void> => {
+    ): Promise<void> {
 
         try {
             const requestData:PlaceOrderRequest = req.body;
-            if (
-                !requestData.userId
-            ) {
-
+            if (!requestData.userId) {
                 const response:ApiResponse<never> = {
                     success:false,
                     message:"User ID is required"
                 };
-                res.status(400).json(
-                    response
-                );
+                res.status(400).json(response);
                 return;
             }
-            if (
-                !requestData.shippingAddress
-            ) {
-                const response:
-                    ApiResponse<never> = {
+            if (!requestData.shippingAddress) {
+                const response:ApiResponse<never> = {
                     success:false,
                     message:"Shipping address is required"
                 };
@@ -324,14 +316,12 @@ export class OrderController {
                 );
                 return;
             }
-
             const result:PlaceOrderResult =
                 await checkoutService.placeOrder(
                     requestData
                 );
 
             const response:ApiResponse<PlaceOrderResult> = {
-
                 success:true,
                 message:"Order placed successfully",
                 data: result
@@ -339,11 +329,9 @@ export class OrderController {
             res.status(201).json(
                 response
             );
-
         } catch (
             error: unknown
         ) {
-
             const message:string =
                 error instanceof Error
                     ? error.message

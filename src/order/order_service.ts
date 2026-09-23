@@ -556,7 +556,6 @@ export class CheckoutService {
                             }
                             : null;
                     return {
-
                         id:item.id,
                         product_id:item.product_id,
                         quantity:item.quantity,
@@ -606,9 +605,7 @@ export class CheckoutService {
                 "Failed to create order"
             );
         }
-        const order:
-            Order =
-            orderData as Order;
+        const order : Order = orderData;
         const {
             data: updatedOrderData,
             error: updateError
@@ -617,7 +614,6 @@ export class CheckoutService {
             .update({
                 status:
                     "confirmed",
-
                 updated_at:
                     new Date().toISOString()
             })
@@ -632,14 +628,11 @@ export class CheckoutService {
                 `Failed to update order status: ${updateError.message}`
             );
         }
-
         if (!updatedOrderData) {
             throw new Error(
                 "Failed to update order"
             );
         }
-
-
         const updatedOrder:Order = updatedOrderData as Order;
         const {
             error: cartUpdateError
@@ -655,8 +648,6 @@ export class CheckoutService {
                 "id",
                 cart.id
             );
-
-
         if (cartUpdateError) {
             throw new Error(
                 `Failed to update cart: ${cartUpdateError.message}`
