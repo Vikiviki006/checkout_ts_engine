@@ -11,12 +11,14 @@ import type {
     CheckoutCart,
     CheckoutCartItem,
     Product,
-    CreateOrderItem
+    CreateOrderItem,
+    PlaceOrderResult,
+    PlaceOrderRequest
+
 } from "./order_types";
 
 
 export class CheckoutService {
-
     async createOrder(
         data: CreateOrderRequest
     ): Promise<CreateOrderResult> {
@@ -54,8 +56,10 @@ export class CheckoutService {
         }
 
 
-        const checkoutCart: CheckoutCart =
+        const checkoutCart:
+            CheckoutCart =
             cart as CheckoutCart;
+
 
         if (
             checkoutCart.status !==
@@ -66,6 +70,7 @@ export class CheckoutService {
             );
         }
 
+
         if (
             !checkoutCart.cart_items ||
             checkoutCart.cart_items.length === 0
@@ -75,18 +80,27 @@ export class CheckoutService {
             );
         }
 
-        let totalAmount: number = 0;
+
+        let totalAmount:
+            number = 0;
 
 
-        const orderItems: CreateOrderItem[] =
+        const orderItems:
+            CreateOrderItem[] =
             checkoutCart.cart_items.map(
                 (
                     item: CheckoutCartItem
                 ): CreateOrderItem => {
+                    const productData:
+                        Product | undefined =
+                        item.products[0];
+
 
                     const product:
                         Product | null =
-                        item.products;
+                        productData
+                            ? productData
+                            : null;
 
 
                     if (!product) {
@@ -94,6 +108,7 @@ export class CheckoutService {
                             "Product not found"
                         );
                     }
+
 
                     if (
                         product.stock <
@@ -104,26 +119,40 @@ export class CheckoutService {
                         );
                     }
 
-                    const unitPrice: number =
-                        Number(product.price);
+
+                    const unitPrice:
+                        number =
+                        Number(
+                            product.price
+                        );
 
 
-                    const subtotal: number =
+                    const subtotal:
+                        number =
                         unitPrice *
                         item.quantity;
 
 
-                    totalAmount += subtotal;
+                    totalAmount +=
+                        subtotal;
 
 
                     return {
-                        product_id: product.id,
-                        quantity: item.quantity,
-                        unit_price: unitPrice,
+
+                        product_id:
+                            product.id,
+
+                        quantity:
+                            item.quantity,
+
+                        unit_price:
+                            unitPrice,
+
                         subtotal
                     };
                 }
             );
+
 
         const {
             data: order,
@@ -131,16 +160,25 @@ export class CheckoutService {
         } = await supabase
             .from("orders")
             .insert({
-                cart_id: data.cartId,
+
+                cart_id:
+                    data.cartId,
+
                 customer_name:
                     data.customerName,
+
                 customer_email:
                     data.customerEmail,
+
                 shipping_address:
                     data.shippingAddress,
-                status: "pending",
+
+                status:
+                    "pending",
+
                 total_amount:
                     totalAmount
+
             })
             .select()
             .single();
@@ -160,26 +198,34 @@ export class CheckoutService {
         }
 
 
-        const createdOrder: Order =
+        const createdOrder:
+            Order =
             order as Order;
+
 
         const itemsToInsert =
             orderItems.map(
                 (
                     item: CreateOrderItem
                 ) => ({
+
                     ...item,
+
                     order_id:
                         createdOrder.id
+
                 })
             );
+
 
         const {
             data: createdItems,
             error: itemsError
         } = await supabase
             .from("order_items")
-            .insert(itemsToInsert)
+            .insert(
+                itemsToInsert
+            )
             .select();
 
 
@@ -206,43 +252,66 @@ export class CheckoutService {
             of checkoutCart.cart_items
         ) {
 
+            const productData:
+                Product | undefined =
+                item.products[0];
+
+
             const product:
                 Product | null =
-                item.products;
+                productData
+                    ? productData
+                    : null;
+
+
             if (!product) {
                 throw new Error(
                     "Product not found"
                 );
             }
 
-            const newStock: number =
+
+            const newStock:
+                number =
                 product.stock -
                 item.quantity;
+
+
             const {
                 error: stockError
             } = await supabase
                 .from("products")
                 .update({
-                    stock: newStock
+
+                    stock:
+                        newStock
+
                 })
                 .eq(
                     "id",
                     product.id
                 );
+
+
             if (stockError) {
                 throw new Error(
                     `Failed to update stock: ${stockError.message}`
                 );
             }
         }
+
         const {
             error: cartUpdateError
         } = await supabase
             .from("carts")
             .update({
-                status: "checked_out",
+
+                status:
+                    "checked_out",
+
                 updated_at:
                     new Date().toISOString()
+
             })
             .eq(
                 "id",
@@ -256,16 +325,23 @@ export class CheckoutService {
             );
         }
 
-        const result: CreateOrderResult = {
-            order: createdOrder,
-            items: typedCreatedItems
+
+        const result:
+            CreateOrderResult = {
+
+            order:
+                createdOrder,
+
+            items:
+                typedCreatedItems
         };
 
 
         return result;
     }
 
-    async getAllOrders(): Promise<OrderWithItems[]> {
+    async getAllOrders():
+        Promise<OrderWithItems[]> {
 
         const {
             data,
@@ -352,9 +428,12 @@ export class CheckoutService {
         } = await supabase
             .from("orders")
             .update({
+
                 ...data,
+
                 updated_at:
                     new Date().toISOString()
+
             })
             .eq(
                 "id",
@@ -393,22 +472,25 @@ export class CheckoutService {
                     )
                 `);
 
+
         if (status) {
 
-            query = query.eq(
-                "status",
-                status
-            );
+            query =
+                query.eq(
+                    "status",
+                    status
+                );
         }
+
 
         if (customerEmail) {
 
-            query = query.eq(
-                "customer_email",
-                customerEmail
-            );
+            query =
+                query.eq(
+                    "customer_email",
+                    customerEmail
+                );
         }
-
         const {
             data,
             error
@@ -419,17 +501,171 @@ export class CheckoutService {
                     ascending: false
                 }
             );
-
-
         if (error) {
             throw new Error(
                 error.message
             );
         }
-
         if (!data) {
             return [];
         }
         return data as OrderWithItems[];
+    }
+
+    async placeOrder(data: PlaceOrderRequest): Promise<PlaceOrderResult> {
+        const {
+            data: cartData,
+            error: cartError
+        } = await supabase
+            .from("carts")
+            .select(`id,status,cart_items (id,product_id,quantity,
+                    products (id,name,price,stock)
+                )
+            `)
+            .eq(
+                "user_id",
+                data.userId
+            )
+            .eq(
+                "status",
+                "active"
+            )
+            .single();
+        if (cartError || !cartData) {
+            throw new Error(
+                "Active cart not found"
+            );
+        }
+
+        const cartItems:CheckoutCartItem[] =
+            cartData.cart_items.map(
+                (
+                    item
+                ): CheckoutCartItem => {
+
+                    const productData:Product | undefined =
+                        item.products[0];
+                    const product:Product | null =
+                        productData
+                            ? {
+                                id:productData.id,
+                                name:productData.name,
+                                price:Number(productData.price
+                                    ),
+                                stock:productData.stock
+                            }
+                            : null;
+                    return {
+
+                        id:item.id,
+                        product_id:item.product_id,
+                        quantity:item.quantity,
+                        products:product
+                                ? [product]
+                                : []
+                    };
+                }
+            );
+        const cart:
+            CheckoutCart = {
+            id:cartData.id,
+            status:cartData.status,
+            cart_items:cartItems
+        };
+
+        if (
+            cart.cart_items.length === 0
+        ) {
+            throw new Error(
+                "Cart is empty"
+            );
+        }
+
+        const {
+            data: orderData,
+            error: orderError
+        } = await supabase
+            .from("orders")
+            .insert({
+                cart_id:cart.id,
+                customer_name:"",
+                customer_email:"",
+                shipping_address:data.shippingAddress,
+                status:"pending",
+                total_amount:0
+            })
+            .select()
+            .single();
+        if (orderError) {
+            throw new Error(
+                `Failed to create order: ${orderError.message}`
+            );
+        }
+        if (!orderData) {
+            throw new Error(
+                "Failed to create order"
+            );
+        }
+        const order:
+            Order =
+            orderData as Order;
+        const {
+            data: updatedOrderData,
+            error: updateError
+        } = await supabase
+            .from("orders")
+            .update({
+                status:
+                    "confirmed",
+
+                updated_at:
+                    new Date().toISOString()
+            })
+            .eq(
+                "id",
+                order.id
+            )
+            .select()
+            .single();
+        if (updateError) {
+            throw new Error(
+                `Failed to update order status: ${updateError.message}`
+            );
+        }
+
+        if (!updatedOrderData) {
+            throw new Error(
+                "Failed to update order"
+            );
+        }
+
+
+        const updatedOrder:Order = updatedOrderData as Order;
+        const {
+            error: cartUpdateError
+        } = await supabase
+            .from("carts")
+            .update({
+                status:
+                    "checked_out",
+                updated_at:
+                    new Date().toISOString()
+            })
+            .eq(
+                "id",
+                cart.id
+            );
+
+
+        if (cartUpdateError) {
+            throw new Error(
+                `Failed to update cart: ${cartUpdateError.message}`
+            );
+        }
+        const result:PlaceOrderResult = {
+            order:
+                updatedOrder
+        };
+        return result;
     }
 }

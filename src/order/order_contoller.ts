@@ -13,7 +13,8 @@ import type {
     OrderIdParams,
     Order,
     OrderWithItems,
-    ApiResponse
+    ApiResponse,
+    PlaceOrderRequest,PlaceOrderResult
 } from "./order_types";
 
 
@@ -282,5 +283,79 @@ export class OrderController {
                 response
             );
         }
+
     }
+    placeOrder = async (
+        req: Request<
+            Record<string, never>,
+            ApiResponse<PlaceOrderResult>,
+            PlaceOrderRequest
+        >,
+        res: Response<
+            ApiResponse<PlaceOrderResult>
+        >
+    ): Promise<void> => {
+
+        try {
+            const requestData:PlaceOrderRequest = req.body;
+            if (
+                !requestData.userId
+            ) {
+
+                const response:ApiResponse<never> = {
+                    success:false,
+                    message:"User ID is required"
+                };
+                res.status(400).json(
+                    response
+                );
+                return;
+            }
+            if (
+                !requestData.shippingAddress
+            ) {
+                const response:
+                    ApiResponse<never> = {
+                    success:false,
+                    message:"Shipping address is required"
+                };
+                res.status(400).json(
+                    response
+                );
+                return;
+            }
+
+            const result:PlaceOrderResult =
+                await checkoutService.placeOrder(
+                    requestData
+                );
+
+            const response:ApiResponse<PlaceOrderResult> = {
+
+                success:true,
+                message:"Order placed successfully",
+                data: result
+            };
+            res.status(201).json(
+                response
+            );
+
+        } catch (
+            error: unknown
+        ) {
+
+            const message:string =
+                error instanceof Error
+                    ? error.message
+                    : "Failed to place order";
+            const response:ApiResponse<never> = {
+                success:false,
+                message:message
+            };
+            res.status(400).json(
+                response
+            );
+        }
+    };
+
 }

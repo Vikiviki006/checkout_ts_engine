@@ -53,7 +53,7 @@ export type CheckoutCartItem = {
     id: string;
     product_id: string;
     quantity: number;
-    products: Product | null;
+    products: Product[];
 };
 
 export type CheckoutCart = {
@@ -108,4 +108,14 @@ export type ApiResponse<T> = {
     success: boolean;
     message?: string;
     data?: T;
+};
+
+
+export type PlaceOrderRequest = {
+    userId: string;
+    shippingAddress: string;
+};
+
+export type PlaceOrderResult = {
+    order: Order;
 };

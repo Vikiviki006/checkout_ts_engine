@@ -11,36 +11,33 @@ const orderController:
 
 router.post(
     "/",
-    orderController.createOrder.bind(
-        orderController
-    )
+    orderController.createOrder
 );
 
 router.get(
     "/",
-    orderController.getAllOrders.bind(
-        orderController
-    )
+    orderController.getAllOrders
 );
 
 router.get(
     "/filter",
-    orderController.filterOrders.bind(
-        orderController
-    )
+    orderController.filterOrders
 );
 
 router.get(
     "/:id",
-    orderController.getOneOrder.bind(
-        orderController
-    )
+    orderController.getOneOrder 
 );
 
 router.patch(
     "/:id",
-    orderController.updateOrder.bind(
-        orderController
-    )
+    orderController.updateOrder
 );
+
+router.post(
+    "/placeOrder",
+    orderController.placeOrder
+);
+
+
 export default router;
